@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+
+  # Aplicación Laravel (PHP)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: latrocha_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - latrocha_network
+    depends_on:
+      - db
+
+  # Servidor web Nginx
+  nginx:
+    image: nginx:alpine
+    container_name: latrocha_nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - latrocha_network
+    depends_on:
+      - app
+
+  # Base de datos MySQL
+  db:
+    image: mysql:8.0
+    container_name: latrocha_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-latrocha}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root1234}
+      MYSQL_USER: ${DB_USERNAME:-latrocha_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-latrocha1234}
+    ports:
+      - "3307:3306"
+    volumes:
+      - latrocha_db_data:/var/lib/mysql
+    networks:
+      - latrocha_network
+
+  # Administrador de base de datos (phpMyAdmin)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: latrocha_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root1234}
+    networks:
+      - latrocha_network
+    depends_on:
+      - db
+
+networks:
+  latrocha_network:
+    driver: bridge
+
+volumes:
+  latrocha_db_data:
+    driver: local
