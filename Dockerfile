@@ -36,6 +36,8 @@ COPY . /var/www
 # Dar permisos correctos
 COPY --chown=www:www . /var/www
 
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
+
 # Cambiar al usuario www
 USER www
 
