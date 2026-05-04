@@ -113,9 +113,11 @@ class ReporteController extends Controller
         $gasolina = $combustible->where('tipo', 'gasolina');
         $acpm     = $combustible->where('tipo', 'acpm');
 
-        $fiadosPendientes = Fiado::where('estado', 'pendiente')->get();
-        $fiadosPagados   = Fiado::where('estado', 'pagado')
-            ->whereBetween('fecha_pago', [$fechaInicio, $fechaFin])
+        $fiadosPendientes = Fiado::where('tipo', 'fiado')
+            ->whereBetween('created_at', [$fechaInicio, $fechaFin])
+            ->get();
+        $fiadosPagados = Fiado::where('tipo', 'abono')
+            ->whereBetween('created_at', [$fechaInicio, $fechaFin])
             ->get();
 
         $lavadas = Lavada::whereBetween('fecha', [$fechaInicio, $fechaFin])->get();
