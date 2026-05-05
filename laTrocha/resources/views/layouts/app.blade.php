@@ -258,11 +258,7 @@
                 Inventario de Bodega
             </a>
 
-            <a href="{{ route('lavadas.index') }}"
-               class="nav-item {{ request()->routeIs('lavadas.*') ? 'active' : '' }}">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                Lavadas
-            </a>
+            
 
             <span class="nav-label">Informes</span>
 

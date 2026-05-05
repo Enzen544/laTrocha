@@ -44,14 +44,12 @@
         @keyframes spin { to { transform:rotate(360deg); } }
     </style>
 
-    {{-- TABS --}}
     <div class="tabs">
         <a href="{{ route('reportes.index', ['tipo' => 'diario']) }}"  class="tab {{ $tipo === 'diario'  ? 'active' : '' }}">Diario</a>
         <a href="{{ route('reportes.index', ['tipo' => 'semanal']) }}" class="tab {{ $tipo === 'semanal' ? 'active' : '' }}">Semanal</a>
         <a href="{{ route('reportes.index', ['tipo' => 'mensual']) }}" class="tab {{ $tipo === 'mensual' ? 'active' : '' }}">Mensual</a>
     </div>
 
-    {{-- BARRA EXPORTAR --}}
     <div class="export-bar">
         <div class="period-label">
             <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -75,7 +73,6 @@
         </div>
     </div>
 
-    {{-- OVERLAY DE CARGA (fuera del export-bar) --}}
     <div id="overlay-carga" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999; align-items:center; justify-content:center;">
         <div style="background:#fff; border-radius:16px; padding:2rem 3rem; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.18);">
             <div style="width:48px; height:48px; border:4px solid #E1F5EE; border-top:4px solid #0F6E56; border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 1rem;"></div>
@@ -84,7 +81,6 @@
         </div>
     </div>
 
-    {{-- COMBUSTIBLE --}}
     <div class="card">
         <p class="card-title">Resumen de Combustible</p>
         <p class="card-sub">Ventas y diferencias del período</p>
@@ -118,22 +114,6 @@
             <div class="stat-box">
                 <div class="stat-label">Abonos del Período</div>
                 <div class="fiados-green2">${{ number_format($datos['fiados_abonos'], 0, ',', '.') }}</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <p class="card-title">Resumen de Lavadas</p>
-        <p class="card-sub">Servicios del período</p>
-        <div class="two-col">
-            <div class="stat-box">
-                <div class="stat-label">Total cobrado</div>
-                <div class="stat-value">${{ number_format($datos['lavadas_total'], 0, ',', '.') }}</div>
-                <div class="stat-sub">{{ $datos['lavadas_count'] }} servicios</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Pendientes de cobro</div>
-                <div class="stat-value" style="color:#BA7517">${{ number_format($datos['lavadas_pendientes'], 0, ',', '.') }}</div>
             </div>
         </div>
     </div>
