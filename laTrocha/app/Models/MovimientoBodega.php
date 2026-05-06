@@ -9,10 +9,20 @@ class MovimientoBodega extends Model
     protected $table = 'movimientos_bodega';
 
     protected $fillable = [
-        'fecha',
+        'producto_id',
         'tipo',
         'cantidad',
-        'precio_unitario',
         'descripcion',
+        'user_id',
     ];
+
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -23,8 +23,15 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/fiados/entidades/{id}', [FiadoController::class, 'destroy'])->name('fiados.entidades.destroy');
 
     Route::resource('combustible', \App\Http\Controllers\CombustibleController::class);
-    Route::resource('bodega', \App\Http\Controllers\BodegaController::class);
     Route::resource('lavadas', \App\Http\Controllers\LavadaController::class);
+
+    // Bodega
+    Route::get('/bodega', [\App\Http\Controllers\BodegaController::class, 'index'])->name('bodega.index');
+    Route::post('/bodega', [\App\Http\Controllers\BodegaController::class, 'store'])->name('bodega.store');
+    Route::put('/bodega/{id}', [\App\Http\Controllers\BodegaController::class, 'update'])->name('bodega.update');
+    Route::delete('/bodega/{id}', [\App\Http\Controllers\BodegaController::class, 'destroy'])->name('bodega.destroy');
+    Route::post('/bodega/movimiento', [\App\Http\Controllers\BodegaController::class, 'movimiento'])->name('bodega.movimiento');
+
     Route::get('/reportes', [\App\Http\Controllers\ReporteController::class, 'index'])->name('reportes.index');
     Route::get('/reportes/pdf', [\App\Http\Controllers\ReporteController::class, 'exportPdf'])->name('reportes.pdf');
     Route::get('/reportes/excel', [\App\Http\Controllers\ReporteController::class, 'exportExcel'])->name('reportes.excel');
