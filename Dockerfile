@@ -24,8 +24,12 @@ RUN composer install --optimize-autoloader --no-dev
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Exponer el puerto dinámico
+# Script de arranque
+COPY docker/start.sh /start.sh
+RUN chmod +x /start.sh
+
+# Exponer puerto (Railway usará $PORT)
 EXPOSE 8080
 
-# Arrancar Laravel directamente en el puerto que Railway asigna
-CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=$PORT"]
+# Arrancar Laravel con el puerto dinámico
+CMD ["/start.sh"]
