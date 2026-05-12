@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #!/bin/bash
 set -e
 
@@ -15,3 +16,7 @@ php /var/www/artisan route:cache
 php /var/www/artisan view:cache
 
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+=======
+#!/bin/sh
+php artisan serve --host=0.0.0.0 --port=${PORT}
+>>>>>>> fc74fc3cc088c95c71c241e23bcd0fdc3f0ff917
