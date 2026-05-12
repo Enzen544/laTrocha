@@ -15,12 +15,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/laTrocha
 
 # Copiar código e instalar dependencias
-COPY . .
+COPY laTrocha/ .
+
+# Instalar dependencias
 RUN composer install --optimize-autoloader --no-dev
 
 # Permisos de Laravel
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
-    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/laTrocha/storage /var/www/laTrocha/bootstrap/cache \
+    && chmod -R 775 /var/www/laTrocha/storage /var/www/laTrocha/bootstrap/cache
+
 
 # Configs
 RUN mkdir -p /var/log/supervisor
