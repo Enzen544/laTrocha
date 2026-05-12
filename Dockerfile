@@ -3,7 +3,7 @@ FROM php:8.2-fpm
 # Dependencias del sistema
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libonig-dev libxml2-dev \
-    libzip-dev zip unzip nginx supervisor \
+    libzip-dev zip unzip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Extensiones PHP
@@ -21,14 +21,11 @@ COPY laTrocha/ .
 RUN composer install --optimize-autoloader --no-dev
 
 # Permisos de Laravel
-RUN chown -R www-data:www-data /var/www/laTrocha/storage /var/www/laTrocha/bootstrap/cache \
-    && chmod -R 775 /var/www/laTrocha/storage /var/www/laTrocha/bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
-
-# Configs
-RUN mkdir -p /var/log/supervisor
-COPY docker/nginx/nginx.conf /etc/nginx/conf.d/default.conf
-COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
+# Exponer el puerto dinámico
 EXPOSE 8080
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+# Arrancar Laravel directamente en el puerto que Railway asigna
+CMD php artisan serve --host=0.0.0.0 --port=$PORT
