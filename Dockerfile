@@ -1,49 +1,31 @@
 FROM php:8.2-fpm
 
-# Instalar dependencias del sistema
+# Dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    git curl libpng-dev libonig-dev libxml2-dev \
+    libzip-dev zip unzip nginx supervisor \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Instalar extensiones PHP necesarias para Laravel
-RUN docker-php-ext-install \
-    pdo_mysql \
-    mbstring \
-    exif \
-    pcntl \
-    bcmath \
-    gd \
-    zip
+# Extensiones PHP
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Instalar Composer
+# Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Crear usuario no-root para la app
-RUN groupadd -g 1000 www && \
-    useradd -u 1000 -ms /bin/bash -g www www
-
-# Copiar el código de la aplicación
-COPY . /var/www
-
-# Dar permisos correctos
-COPY --chown=www:www . /var/www
-
-COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
-
-# Cambiar al usuario www
-USER www
-
-# Directorio de trabajo
 WORKDIR /var/www
 
-EXPOSE 9000
+# Copiar código e instalar dependencias
+COPY . .
+RUN composer install --optimize-autoloader --no-dev
 
-CMD ["php-fpm"]
+# Permisos de Laravel
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
+# Configs
+COPY docker/nginx/nginx.conf /etc/nginx/sites-available/default
+COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+EXPOSE 8080
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
