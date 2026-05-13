@@ -10,6 +10,7 @@ return new class extends Migration
         Schema::create('fiados', function (Blueprint $table) {
             $table->id();
             $table->foreignId('entidad_id')->constrained('entidades')->onDelete('restrict');
+            $table->string('estado')->default('pendiente');
             $table->enum('tipo', ['fiado', 'abono']);
             $table->enum('tipo_registro', ['pesos', 'galones'])->default('pesos');
             $table->decimal('monto', 12, 2);
